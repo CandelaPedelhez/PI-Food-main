@@ -8,20 +8,32 @@ module.exports = (sequelize) => {
       type: DataTypes.UUID, /* para que no se pise con los id de la db */
       defaultValue: DataTypes.UUIDV4, /* es que se usa el UUID v4 standard */
       allowNull: false, /* no puede estar vacío */
-      primarykey: true /* clave primaria */
+      primaryKey: true /* clave primaria */
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
-    resumendelplato: {
-
+    summary: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    spoonacularScore: {
+      type: DataTypes.INTEGER
+    },
+    healthScore: {
+      type: DataTypes.INTEGER
+    },
+    analyzedInstructions: {
+      type: DataTypes.JSON
+    },
+    image: {
+      type: DataTypes.STRING,
     },
     createdInDb: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true,
+      defaultValue: true
     }
-    
   });
 };
