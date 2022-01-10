@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
   // defino el modelo
-  sequelize.define('typesofDiet', { /* sin id acá porque nosotros no vamos a crear ninguna dieta, y el id se crea por defecto */
+  sequelize.define('typesofDiet', { /* sin id acá porque se crea por defecto, y las dietas en la api vienen en un arreglo, no tienen ID y no se pueden 'pisar' entonces */
     name: {
         type: DataTypes.STRING,
         allowNull: false
