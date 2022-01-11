@@ -1,7 +1,7 @@
 const { Router } = require('express');
 require("dotenv").config();
 const { Recipe, TypesofDiet } = require('../db');
-const { API_KEY } = process.env;
+const { API_KEY , API_KEY2} = process.env;
 const axios = require('axios');
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
@@ -11,8 +11,8 @@ const router = Router();
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 const getApiRecipes = async () => { /* me trae la info de la Api */
-    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
-    const apiInfo = await apiUrl.data.map(e => {
+    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
+    const apiInfo = await apiUrl.data.results.map(e => {
         return {
             id: e.id,
             name: e.title,
@@ -23,7 +23,7 @@ const getApiRecipes = async () => { /* me trae la info de la Api */
             img: e.image,
             diets: e.diets.map(e => e), /* es un arreglo */
         }
-    }); /* en axios la info me llega en un 'data' */
+    }) /* en axios la info me llega en un 'data' */
     return apiInfo;
 }
 
@@ -39,11 +39,11 @@ const getDbRecipes = async () => { /* me trae la info del db */
     })
 }
 
-const getAllRecipes = async () => { 
+const getAllRecipes = async () => {
     const apiInfo = await getApiRecipes();
     const dbInfo = await getDbRecipes();
     const infoTotal = apiInfo.concat(dbInfo);
-    return infoTotal 
+    return infoTotal
 }
 
 
@@ -62,45 +62,57 @@ router.get('/recipes', async (req, res) => {
 }),
 
 router.get('/types', async (req, res) => {
-    const dietsApi = await axios.get('https://api.spoonacular.com/recipes/complexSearch?apiKey={API_KEY}&addRecipeInformation=true&number=100')
-    const arraysDiets = dietsApi.data.map(e => e.diets)
-    const dietsEach = arraysDiets.map(e => { 
-        for (let i = 0; i < e.length; i++) return e[i]
-        })
+    const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true`)
+    const arraysDiets = dietsApi.data.results.map(e => e.diets) /* diets es array */
+    const dietsEach = [];
+    arraysDiets.map((e) => {
+        for (let i = 0; i < e.length; i += 1) dietsEach.push(e[i]);
+      });
     dietsEach.forEach(e => {
         TypesofDiet.findOrCreate({
-            where: { name: e } 
+            where: { name: e }
         })
     });
     const allDiets = await TypesofDiet.findAll();
     res.send(allDiets);
-})
+}),
 
-router.post('/recipe', async (req, res) => {
-    let {
-        name,
-        summary,
-        score,
-        healthScore,
-        stepbyStep,
-        img,
-        createdInDb,
-        diet,
-    } = req.body
-    let recipeCreated = await Recipe.create({
-        name,
-        summary,
-        score,
-        healthScore,
-        stepbyStep,
-        img,
-        createdInDb,
-    })
+router.get('/recipes/:id', async (req, res) => {
+    const id = req.params.id;
+    const recipesTotalId = await getAllRecipes()
+    if (id) {
+        let recipeId = await recipesTotalId.filter(e => e.id == id)
+        recipesTotalId.length ?
+            res.status(200).json(recipeId) :
+            res.status(404).send('No encontramos la receta, lo siento')
+    }
+}),
+
+router.post('/recipe' , async (req, res) => {
+    let {name, summary, score, healthScore, stepbyStep, img, createdInDb, diet} = req.body;
+    let recipeCreated = await Recipe.create({name, summary, score, healthScore, stepbyStep, img, createdInDb})
     let dietDb = await TypesofDiet.findAll({
-        where: {name: diet}
+        where: { name: diet }
     })
-    recipeCreated.addTypeofDiet(dietDb)
-    res.send('Tu receta ha sido creada con éxito')
+    recipeCreated.addTypesofDiet(dietDb)
+    res.send('Tu receta se creó con éxito')
 })
 
 module.exports = router;
+
+/* router.post("/recipe", (req,res) => {
+    let {name,summary,score,healthScore,stepbyStep,img,diet}=req.body
+
+    Recipe.create({
+        name,
+        summary,
+        score,
+        healthScore,
+        stepbyStep,
+        img,
+    })
+    .then(createdRecipe => {
+        res.json(createdRecipe)
+    })
+    .catch(err => res.sendStatus(404))
+}) */
