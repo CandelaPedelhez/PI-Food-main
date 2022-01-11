@@ -64,7 +64,7 @@ router.get('/recipes', async (req, res) => {
 router.get('/types', async (req, res) => {
     const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true`)
     const arraysDiets = dietsApi.data.results.map(e => e.diets) /* diets es array */
-    const dietsEach = [];
+    const dietsEach = ["ketogenic", "vegetarian", "pescetarian", "low FODMAP", "whole30"];
     arraysDiets.map((e) => {
         for (let i = 0; i < e.length; i += 1) dietsEach.push(e[i]);
       });
@@ -79,13 +79,11 @@ router.get('/types', async (req, res) => {
 
 router.get('/recipes/:id', async (req, res) => {
     const id = req.params.id;
-    const recipesTotalId = await getAllRecipes()
-    if (id) {
-        let recipeId = await recipesTotalId.filter(e => e.id == id)
-        recipesTotalId.length ?
-            res.status(200).json(recipeId) :
-            res.status(404).send('No encontramos la receta, lo siento')
-    }
+    const searchId = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY2}`);
+    const infoId = {name: searchId.data.title, image: searchId.data.image}
+    searchId ? 
+        res.status(200).send(infoId) :
+        res.status(404).send('No encontramos la receta, lo siento')
 }),
 
 router.post('/recipe' , async (req, res) => {
