@@ -4,11 +4,22 @@ import {useDispatch, useSelector} from "react-redux";
 import { getAllRecipes } from "../actions";
 import {Link} from 'react-router-dom'
 import Card from './Card'
+import Paginado from "./Paginado";
 
 export default function Home(){
     const dispatch = useDispatch()
     const allRecipes = useSelector(state => state.recipes) /* traeme todo el state de recipes */
-    
+    const [currentPage, setCurrentPage] = useState(1); /* seteamos la pagina actual */
+    const [recipesPerPage, setRecipesPerPage] = useState(9); /* guardamos cuántos personajes por página */
+    const indexOfLastRecipe = currentPage * recipesPerPage; /* última receta de la página */
+    const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage /* acá nos da la primer receta de cada pag */
+    const currentRecipes = allRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);/* acá nos muestra todas las recetas de la página actual */
+
+    const paginado = (pageNumber) => {
+        setCurrentPage(pageNumber)
+    }
+
+
     useEffect(() => {
         dispatch(getAllRecipes())
     },[dispatch]) /* el [] es la dependencia */
@@ -48,12 +59,17 @@ export default function Home(){
                     <option value= 'low FODMAP'>Low FODMAP</option>
                     <option value= 'whole30'>Whole30</option>
                 </select>
+                <Paginado
+                recipesPerPage = {recipesPerPage}
+                allRecipes = {allRecipes.length}
+                paginado = {paginado}
+                />
                 {
-                    allRecipes?.map(e => {
+                    currentRecipes?.map(e => {
                         return(
                             <fragment>
                                 <Link to = {"/home/" + e.id}>
-                                    <Card name={e.name} image= {e.image} diet= {e.diet}/>
+                                    <Card name={e.name} image= {e.image} diets= {e.diets}/>
                                 </Link>
                             </fragment>
                         )

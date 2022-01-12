@@ -85,7 +85,7 @@ router.get('/types', async (req, res) => {
 router.get('/recipes/:id', async (req, res) => {
     const id = req.params.id;
     const searchId = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY2}`);
-    const infoId = {name: searchId.data.title, image: searchId.data.image}
+    const infoId = {name: searchId.data.title, image: searchId.data.image, diet: searchId.data.diets}
     searchId ? 
         res.status(200).send(infoId) :
         res.status(404).send('No encontramos la receta, lo siento')
