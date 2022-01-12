@@ -11,7 +11,7 @@ const router = Router();
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 const getApiRecipes = async () => { /* me trae la info de la Api */
-    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
+    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
     const apiInfo = await apiUrl.data.results.map(e => {
         return {
             id: e.id,
@@ -49,16 +49,21 @@ const getAllRecipes = async () => {
 
 router.get('/recipes', async (req, res) => {
     let name = req.query.name;
-    const recipesTotal = await getAllRecipes();
-    if (name) {
-        let recipeName = await recipesTotal.filter(e => e.name.toLowerCase().includes(name.toLowerCase()));
-        recipeName.length ?
-            res.status(200).send(recipeName) :
-            res.status(404).send('No pudimos encontrar la receta')
+    try{
+        const recipesTotal = await getAllRecipes();
+        if (name) {
+            let recipeName = await recipesTotal.filter(e => e.name.toLowerCase().includes(name.toLowerCase()));
+            recipeName.length ?
+                res.status(200).send(recipeName) :
+                res.status(404).send('No pudimos encontrar la receta')
+        }
+        else {
+            res.status(200).send(recipesTotal);
+        }
+    } catch(err){
+        console.log(err);
     }
-    else {
-        res.status(200).send(recipesTotal);
-    }
+
 }),
 
 router.get('/types', async (req, res) => {

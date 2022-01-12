@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 import {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import { getRecipes } from "../actions";
+import { getAllRecipes } from "../actions";
 import {Link} from 'react-router-dom'
 import Card from './Card'
 
@@ -10,12 +10,12 @@ export default function Home(){
     const allRecipes = useSelector(state => state.recipes) /* traeme todo el state de recipes */
     
     useEffect(() => {
-        dispatch(getRecipes())
+        dispatch(getAllRecipes())
     },[dispatch]) /* el [] es la dependencia */
 
     function handleClick(e){
         e.preventDefault();
-        dispatch(getRecipes());
+        dispatch(getAllRecipes());
     }
 
     return(
@@ -35,7 +35,7 @@ export default function Home(){
                     <option value= 'ascP'>Lower Score</option>
                 </select>
                 <select>
-                    <option value= 'All'>Todas</option>
+                    <option value= 'All'>All</option>
                     <option value= 'gluten free'>Gluten Free</option>
                     <option value= 'ketogenic'>Ketogenic</option>
                     <option value= 'vegetarian'>Vegetarian</option>
@@ -56,9 +56,7 @@ export default function Home(){
                                     <Card name={e.name} image= {e.image} diet= {e.diet}/>
                                 </Link>
                             </fragment>
-                            
                         )
-
                     })
                 }
             </div>
