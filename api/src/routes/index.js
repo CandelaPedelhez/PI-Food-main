@@ -20,7 +20,7 @@ const getApiRecipes = async () => { /* me trae la info de la Api */
             score: e.spoonacularScore,
             healthScore: e.healthScore,
             stepbyStep: e.analyzedInstructions,
-            img: e.image,
+            image: e.image,
             diets: e.diets.map(e => e), /* es un arreglo */
         }
     }) /* en axios la info me llega en un 'data' */
@@ -64,7 +64,7 @@ router.get('/recipes', async (req, res) => {
 router.get('/types', async (req, res) => {
     const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true`)
     const arraysDiets = dietsApi.data.results.map(e => e.diets) /* diets es array */
-    const dietsEach = ["ketogenic", "vegetarian", "pescetarian", "low FODMAP", "whole30"];
+    const dietsEach = ["ketogenic", "vegetarian", "pescetarian", "low FODMAP", "whole30", "lacto vegetarian", "ovo vegetarian"];
     arraysDiets.map((e) => {
         for (let i = 0; i < e.length; i += 1) dietsEach.push(e[i]);
       });
@@ -87,8 +87,8 @@ router.get('/recipes/:id', async (req, res) => {
 }),
 
 router.post('/recipe' , async (req, res) => {
-    let {name, summary, score, healthScore, stepbyStep, img, createdInDb, diet} = req.body;
-    let recipeCreated = await Recipe.create({name, summary, score, healthScore, stepbyStep, img, createdInDb})
+    let {name, summary, score, healthScore, stepbyStep, image, createdInDb, diet} = req.body;
+    let recipeCreated = await Recipe.create({name, summary, score, healthScore, stepbyStep, image, createdInDb})
     let dietDb = await TypesofDiet.findAll({
         where: { name: diet }
     })
