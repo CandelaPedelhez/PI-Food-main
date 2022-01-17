@@ -52,14 +52,11 @@ export default function Home() {
     }
 
     return (
-        <div>
-            <Link to="/recipe">Crear Receta</Link>
+        <div className="container_menu">
             <h1>Feed-me</h1>
-            <SearchBar/>
-            <button onClick={e => handleClick(e)} >
-                Delete filters
-            </button>
-            <div>
+            <Link to="/recipe">Crear Receta</Link>
+            <div className="container_search">
+                <SearchBar/>
                 <select onChange={e => handleSortName(e)}>
                     <option value="">Order by name</option>
                     <option value="asc">Ascending</option>
@@ -86,6 +83,9 @@ export default function Home() {
                         <option value="whole30">Whole30</option>
                     </select>
                 }
+                <button className="search_button" onClick={e => handleClick(e)} >
+                    Delete filters
+                </button>
                 </div>
                 <div>
                 <Paginado
@@ -93,22 +93,24 @@ export default function Home() {
                     allRecipes={allRecipes.length}
                     paginado={paginado}
                 />
-                {
-                    (currentRecipes)? currentRecipes.map(e => (
-                        (e.diets) ?
-                            <fragment>
-                                <Link to={"/recipes/" + e.id}>
-                                    <Card name={e.name} image={e.image} diets={e.diets.map((s) => (<li>{s}</li>))} />
+                <div className="recetas">
+                    {
+                        (currentRecipes)? currentRecipes.map(e => (
+                            (e.diets) ?
+                                <fragment>
+                                    <Link className="container_receta" to={"/recipes/" + e.id}>
+                                        <Card name={e.name} image={e.image} diets={e.diets.map((s) => (<li>{s}</li>))} />
+                                    </Link>
+                                </fragment> :
+                                <fragment>
+                                <Link className="container_receta" to={"/recipes/" + e.id}>
+                                    <Card name={e.name} image={e.image} diets={e.typesofDiets.map((s) => (<li>{s.name}</li>))} />
                                 </Link>
-                            </fragment> :
-                            <fragment>
-                            <Link to={"/recipes/" + e.id}>
-                                <Card name={e.name} image={e.image} diets={e.typesofDiets.map((s) => (<li>{s.name}</li>))} />
-                            </Link>
-                        </fragment>
+                            </fragment>
 
-                    )) : <p >Loading ...</p>
-                }
+                        )) : <p >Loading ...</p>
+                    }
+                </div>
             </div>
         </div>
     )

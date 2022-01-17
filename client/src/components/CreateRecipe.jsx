@@ -111,58 +111,60 @@ export default function CreateRecipe() {
         <div>
             <Link to='/home'><button>Back</button></Link>
             <h1>Create your own recipe</h1>
-            <form onSubmit={(e) => handleSubmit(e)}>
-                <div>
+            <form className="form_recipe" onSubmit={(e) => handleSubmit(e)}>
+                <div className="recipe_container">
                     <label>Name *</label>
                     <input type="text" value={input.name} name="name" onChange={(e) => handleChange(e)} />
                     {errors.name && (
                         <p>{errors.name}</p>
                     )}
                 </div>
-                <div>
+                <div className="recipe_container recipe_area">
                     <label>Summary *</label>
-                    <input type="text" value={input.summary} name="summary" onChange={(e) => handleChange(e)} />
+                    <textarea rows={4} type="text" value={input.summary} name="summary" onChange={(e) => handleChange(e)} />
                     {errors.summary && (
                         <p>{errors.summary}</p>
                     )}
                 </div>
-                <div>
+                <div className="recipe_container">
                     <label>Score</label>
                     <input type="number" value={input.score} name="score" onChange={(e) => handleChange(e)} />
                     {errors.score && (
                         <p>{errors.score}</p>
                     )}
                 </div>
-                <div>
+                <div className="recipe_container">
                     <label>Health-Score</label>
                     <input type="number" value={input.healthScore} name="healthScore" onChange={(e) => handleChange(e)} />
                     {errors.healthScore && (
                         <p>{errors.healthScore}</p>
                     )}
                 </div>
-                <div>
+                <div className="recipe_container recipe_area">
                     <label>Step-by-Step</label>
-                    <input type="text" value={input.stepbyStep} name="stepbyStep" onChange={(e) => handleChange(e)} />
+                    <textarea rows={4} type="text" value={input.stepbyStep} name="stepbyStep" onChange={(e) => handleChange(e)} />
                 </div>
-                <div>
+                <div className="recipe_container">
                     <label>Image</label>
                     <input type="text" value={input.image} name="image" onChange={(e) => handleChange(e)} />
                 </div>
-                <div>
+                <div className="recipe_container column">
                     <select onChange={(e) => handleSelect(e)}>
                         {diets.map((diet) => {
                             return <option value={diet.name}>{diet.name}</option>
                         })}
                     </select>
-                    {
-                        input.diets.map(d =>
-                            <div>
-                                <p>{d}</p>
-                                <button onClick={(e) => handleDelete(e, d)}>X</button>
-                            </div>)
-                    }
+                    <div className="recipe_data">
+                        {
+                            input.diets.map(d =>
+                                <div className="recipe_create">
+                                    <p>{d}</p>
+                                    <button onClick={(e) => handleDelete(e, d)}>X</button>
+                                </div>)
+                        }
+                    </div>
                 </div>
-                <button type="submit">Create recipe</button>
+                <button className="recipe_submit" type="submit">Create recipe</button>
             </form>
             <div>
                 <h5>Those with * are obligatory</h5>

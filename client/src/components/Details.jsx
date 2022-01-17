@@ -24,10 +24,10 @@ export default function Details() {
                             <p >Loading ...</p>
                         </div>
                         :
-                        <div>
+                        <div className="detail">
                             <h1 >{myRecipe.name}</h1>
                             <img src={myRecipe.image} />
-                            <h3 >Summary</h3>
+                            <h3>Summary</h3>
                             <p >{myRecipe.summary}</p>
                             <h3>Score</h3>
                             <p >{myRecipe.score}</p>
@@ -41,7 +41,7 @@ export default function Details() {
                             }
                             <h3 >Step-by-Step</h3>
                             {
-                                (myRecipe.stepbyStep !== null) ?
+                                (myRecipe.stepbyStep !== "") ?
                                     <p>{myRecipe.stepbyStep}</p> :
                                     <p>You didn't load any</p>
                             }
@@ -51,7 +51,7 @@ export default function Details() {
             </div>
             <div>
                 <Link to="/home">
-                    <button>Go back!</button>
+                    <button className="back_button">Go back!</button>
                 </Link>
             </div>
         </div>

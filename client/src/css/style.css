@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700&display=swap');
+
+*{
+    font-family: 'Raleway', sans-serif;
+}
+
+body{
+    background: no-repeat url('../images/bg_food.jpg');
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+h1{
+    color: white;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    color: white;
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    width: 400px;
+    background-color: #28262C;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px black;
+}
+
+.container a button{
+    padding: 15px;
+    background-color: white;
+    color: #28262C;
+    border-radius: 10px;
+    border: 2px solid white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.container a button:hover{
+    background-color: #28262C;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.container_menu{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.container_menu a{
+    width: 10%;
+    text-decoration: none;
+    color: #28262C;
+    background-color: white;
+    padding: 15px;
+    margin: 10px;
+    border: 2px solid white;
+    border-radius: 10px;
+}.container_menu a:hover{
+    background-color: #28262C;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 20px black;
+}
+
+.container_search{
+    display: flex;
+    justify-content: space-between;
+}
+.container_search .search_intro{
+    padding: 0;
+}
+.container_search div, .container_search select{
+    padding: 10px;
+}
+.container_search .search_intro input, .container_search .search_intro button{
+    width: 100%;
+    padding: 5px;
+}
+.container_search .search_intro input{
+    border: none;
+    outline: none;
+}
+.search_button:hover{
+    color: white;
+    background-color: #28262C;
+    transition: .3s;
+    cursor: pointer;
+}
+.search_button{
+    color: #28262C;
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+    border: black;
+}
+
+.paginador ul{
+    list-style-type: none;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
+}
+.paginador ul li button{
+    padding: 10px;
+    color: white;
+    background-color: #28262C;
+    border: 1px solid white;
+}
+.paginador ul li button:hover{
+    color: #28262C;
+    background-color: white;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.recetas .container_receta{
+    background-color: #28262C;
+    padding: 10px;
+    width: 100%;
+    display: block;
+    color: white;
+    overflow: hidden;
+}
+.recetas .container_receta:hover{
+    box-shadow: 0 0 20px black;
+}
+
+/* FORM RECIPE */
+.form_recipe{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form_recipe input{
+    padding: 10px;
+    width: 50%
+}
+.recipe_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.form_recipe .recipe_container{
+    width: 50%;
+    padding: 10px;
+}
+.recipe_container label{
+    margin-right: 20px;
+    color: white;
+    width: 50%;
+}
+.recipe_container textarea{
+    resize: none;
+    width: 50%;
+}
+.recipe_area{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.recipe_container select{
+    padding: 10px;
+    color: #28262C;
+    background-color: white;
+}
+.recipe_data{
+    background-color: #28262C;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 2px solid white;
+    width: 60%;
+}
+.form_recipe .column{
+    flex-direction: column;
+}
+.recipe_create{
+    display: flex;
+    justify-content: space-around;
+    color: white;
+    font-weight: bold;
+    margin: 10px 0;
+}
+.recipe_create p{
+    width: 200px;
+}
+.recipe_create button, .recipe_submit{
+    padding: 10px;
+    color: #28262C;
+    font-weight: bold;
+}.recipe_create button:hover,.recipe_submit:hover{
+    color: white;
+    background-color: #28262C;
+    transition: .3s;
+    cursor: pointer;
+}
+
+h5{
+    color: white;
+}
+
+/* DETAIL */
+.detail{
+    background-color: rgba(63, 63, 63, 0.3);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+    color: white;
+}
+.back_button{
+    padding: 10px;
+    background-color: white;
+    color: #28262C;
+    border: 2px solid white;
+}.back_button:hover{
+    color: white;
+    background-color: #28262C;
+    cursor: pointer;
+    transition: .3s;
+}

@@ -8,7 +8,7 @@ export default function Paginado({recipesPerPage, allRecipes, paginado}){
     }
 
     return(
-        <nav>
+        <nav className='paginador'>
             <ul>
                 {
                     pageNumbers && pageNumbers.map(number => {
