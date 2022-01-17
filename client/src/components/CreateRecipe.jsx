@@ -24,28 +24,24 @@ function validate(input) {
 export default function CreateRecipe() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const diets = useSelector((state) => state.diets);
-    const [errors, setErrors] = useState({});
-
-    useEffect(() => {
-        dispatch(getDiets());
-    }, [dispatch]);
+    const diets = useSelector((state) => state.diets)
+    const [errors, setErrors] = useState({})
 
     const [input, setInput] = useState({ /* input = estado local */
         name: "",
         summary: "",
-        score: 0,
-        healthScore: 0,
+        score: 50,
+        healthScore: 50,
         stepbyStep: "",
         image: "",
         diets: []
-    });
+    })
 
     function handleChange(e) {
-        setInput((input) => ({
+        setInput({
             ...input,
-            [e.target.name]: e.target.value,
-        }));
+            [e.target.name]: e.target.value
+        });
         setErrors(validate({
             ...input,
             [e.target.name]: e.target.value
@@ -53,30 +49,10 @@ export default function CreateRecipe() {
     }
 
     function handleSelect(e) {
-        setInput((input) => ({
+        setInput({
             ...input,
             diets: [...input.diets, e.target.value]
-        }));
-        setErrors(validate({
-            ...input,
-            diets: [...input.diets, e.target.value],
-        }))
-    }
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        dispatch(postRecipe(input));
-        setInput({
-            name: "",
-            summary: "",
-            score: 0,
-            healthScore: 0,
-            stepbyStep: "",
-            image: "",
-            diets: []
-        });
-        alert("Recipe created");
-        navigate("/home")
+        })
     }
 
     function handleDelete(e, d) {
@@ -86,6 +62,27 @@ export default function CreateRecipe() {
             diets: input.diets.filter(diet => diet !== d),
         });
     }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        dispatch(postRecipe(input))
+        setInput({
+            name: "",
+            summary: "",
+            score: 50,
+            healthScore: 50,
+            stepbyStep: "",
+            image: "",
+            diets: []
+        });
+        alert("Recipe created");
+        navigate("/home")
+    }
+
+    useEffect(() => {
+        dispatch(getDiets());
+    }, [dispatch]);
+
 
     return (
         <div>

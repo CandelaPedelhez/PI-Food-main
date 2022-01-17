@@ -6,7 +6,6 @@ module.exports = (sequelize) => {
   sequelize.define('typesofDiet', { /* sin id acá porque se crea por defecto, y las dietas en la api vienen en un arreglo, no tienen ID y no se pueden 'pisar' entonces */
     name: {
         type: DataTypes.STRING,
-        allowNull: false
     }
   });
 };

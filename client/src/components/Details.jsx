@@ -14,7 +14,7 @@ export default function Details() {
         dispatch(getDetails(recipeId.id));
     }, [dispatch]) /* así accedemos al id de la recipe que accedemos  */
 
-    
+
     return (
         <div >
             <div>
@@ -34,9 +34,18 @@ export default function Details() {
                             <h3>Health Score</h3>
                             <p >{myRecipe.healthScore}</p>
                             <h3 >Diets</h3>
-                            <p>{myRecipe.diets.map(r => (<li>{r} </li>))}</p>
+                            {
+                                (myRecipe.diets) ?
+                                    <p>{myRecipe.diets.map(r => (<li>{r} </li>))}</p> :
+                                    <p>{myRecipe.typesofDiets.map((s) => (s.name))}</p>
+                            }
                             <h3 >Step-by-Step</h3>
-                            <p>{myRecipe.stepbyStep[0].map((s) => (s))}</p>
+                            {
+                                (myRecipe.stepbyStep !== null) ?
+                                    <p>{myRecipe.stepbyStep[0].map((s) => (s))}</p> :
+                                    <p>You didn't load any</p>
+                            }
+
                         </div>
                 }
             </div>

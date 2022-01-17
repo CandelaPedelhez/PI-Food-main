@@ -35,7 +35,7 @@ export function getDiets(){
 }
 
 export function postRecipe(payload){
-    return async function(dispatch){
+    return async function(){
         try{
             var json = await axios.post("http://localhost:3001/recipe", payload);
             return{
