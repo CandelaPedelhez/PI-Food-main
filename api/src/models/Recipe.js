@@ -25,7 +25,7 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER
     },
     stepbyStep: {
-      type: DataTypes.JSON
+      type: DataTypes.STRING
     },
     image: {
       type: DataTypes.STRING,

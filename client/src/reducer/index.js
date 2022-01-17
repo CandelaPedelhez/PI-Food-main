@@ -3,7 +3,8 @@ const initialState = {
     allRecipes: [], /* Recetas*/
     recipesByScore: [], /* filtrado + ordenamiento */
     recipesByName: [],
-    diets: []
+    diets: [],
+    details: []
 }
 let filtro = false;
 
@@ -157,6 +158,12 @@ function rootReducer(state = initialState, action) {
             return {
                 ...state,
             }
+
+            case "GET_DETAILS":
+                return{
+                    ...state,
+                    details: action.payload
+                }
 
         default:
             return state

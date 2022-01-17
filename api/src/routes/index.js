@@ -11,7 +11,7 @@ const router = Router();
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 const getApiRecipes = async () => { /* me trae la info de la Api */
-    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
+    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY3}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
     const apiInfo = await apiUrl.data.results.map(e => {
         return {
             id: e.id,
@@ -19,7 +19,7 @@ const getApiRecipes = async () => { /* me trae la info de la Api */
             summary: e.summary,
             score: e.spoonacularScore,
             healthScore: e.healthScore,
-            stepbyStep: e.analyzedInstructions,
+            stepbyStep: e.analyzedInstructions.map(obj => obj.steps.map(obj2 => obj2.step)),
             image: e.image,
             diets: e.diets.map(e => e), /* es un arreglo */
         }
@@ -67,7 +67,7 @@ router.get('/recipes', async (req, res) => {
 }),
 
 router.get('/types', async (req, res) => {
-    const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true`)
+    const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY3}&addRecipeInformation=true`)
     const arraysDiets = dietsApi.data.results.map(e => e.diets) /* diets es array */
     const dietsEach = ["ketogenic", "vegetarian", "pescetarian", "low FODMAP", "whole30", "lacto vegetarian", "ovo vegetarian"];
     arraysDiets.map((e) => {
@@ -84,18 +84,18 @@ router.get('/types', async (req, res) => {
 
 router.get('/recipes/:id', async (req, res) => {
     const id = req.params.id;
-    const searchId = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY2}`);
-    const infoId = {name: searchId.data.title, image: searchId.data.image, diet: searchId.data.diets}
+    const searchId = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY3}`);
+    const infoId = {name: searchId.data.title, image: searchId.data.image, diets: searchId.data.diets, summary: searchId.data.summary, score: searchId.data.spoonacularScore, healthScore: searchId.data.healthScore, stepbyStep: searchId.data.analyzedInstructions.map(obj => obj.steps.map(obj2 => obj2.step))}
     searchId ? 
         res.status(200).send(infoId) :
         res.status(404).send('No encontramos la receta, lo siento')
 }),
 
 router.post('/recipe' , async (req, res) => {
-    let {name, summary, score, healthScore, stepbyStep, image, createdInDb, diet} = req.body;
+    let {name, summary, score, healthScore, stepbyStep, image, createdInDb, diets} = req.body;
     let recipeCreated = await Recipe.create({name, summary, score, healthScore, stepbyStep, image, createdInDb})
     let dietDb = await TypesofDiet.findAll({
-        where: { name: diet }
+        where: { name: diets }
     })
     recipeCreated.addTypesofDiet(dietDb)
     res.send('Tu receta se creó con éxito')

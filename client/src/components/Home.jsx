@@ -94,7 +94,7 @@ export default function Home() {
                     currentRecipes?.map(e => {
                         return (
                             <fragment>
-                                <Link to={"/home/" + e.id}>
+                                <Link to={"/recipes/" + e.id}>
                                     <Card name={e.name} image={e.image} diets={e.diets} />
                                 </Link>
                             </fragment>

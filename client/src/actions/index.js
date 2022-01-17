@@ -67,3 +67,17 @@ export function orderByScore(payload){
         payload
     }
 }
+
+export function getDetails(payload){
+    return async function(dispatch){
+        try{
+            var json = await axios.get("http://localhost:3001/recipes/" + payload);
+            return dispatch({
+                type: "GET_DETAILS",
+                payload: json.data
+            })
+        } catch(e){
+            console.log(e)
+        }
+    }
+}
