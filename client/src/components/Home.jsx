@@ -9,7 +9,10 @@ import SearchBar from "./SearchBar";
 
 export default function Home() {
     const dispatch = useDispatch()
-    const allRecipes = useSelector(state => state.recipes) /* traeme todo el state de recipes */
+    const allRecipes = useSelector(state => state.allRecipes) /* traeme todo el state de recipes */
+    console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ,allRecipes)
+    const recipes = useSelector((state) => state.recipes)
+    console.log("chauuuuuuuuuu", recipes)
     const [currentPage, setCurrentPage] = useState(1); /* seteamos la pagina actual */
     const [recipesPerPage, setRecipesPerPage] = useState(9); /* guardamos cuántos personajes por página */
     const indexOfLastRecipe = currentPage * recipesPerPage; /* última receta de la página */
@@ -91,15 +94,20 @@ export default function Home() {
                     paginado={paginado}
                 />
                 {
-                    currentRecipes?.map(e => {
-                        return (
+                    (currentRecipes)? currentRecipes.map(e => (
+                        (e.diets) ?
                             <fragment>
                                 <Link to={"/recipes/" + e.id}>
-                                    <Card name={e.name} image={e.image} diets={e.diets} />
+                                    <Card name={e.name} image={e.image} diets={e.diets.map((s) => (<li>{s}</li>))} />
                                 </Link>
-                            </fragment>
-                        )
-                    })
+                            </fragment> :
+                            <fragment>
+                            <Link to={"/recipes/" + e.id}>
+                                <Card name={e.name} image={e.image} diets={e.typesofDiets.map((s) => (<li>{s.name}</li>))} />
+                            </Link>
+                        </fragment>
+
+                    )) : <p >Loading ...</p>
                 }
             </div>
         </div>

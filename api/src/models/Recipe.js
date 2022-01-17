@@ -19,13 +19,13 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     score: {
-      type: DataTypes.INTEGER
+      type: DataTypes.FLOAT
     },
     healthScore: {
-      type: DataTypes.INTEGER
+      type: DataTypes.FLOAT
     },
     stepbyStep: {
-      type: DataTypes.STRING
+      type: DataTypes.TEXT,
     },
     image: {
       type: DataTypes.STRING,

@@ -1,7 +1,7 @@
 const { Router } = require('express');
 require("dotenv").config();
 const { Recipe, TypesofDiet } = require('../db');
-const { API_KEY, API_KEY2, API_KEY3 } = process.env;
+const { API_KEY, API_KEY2, API_KEY3, API_KEY4} = process.env;
 const axios = require('axios');
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
@@ -11,7 +11,7 @@ const router = Router();
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 const getApiRecipes = async () => { /* me trae la info de la Api */
-    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
+    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY4}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
     const apiInfo = await apiUrl.data.results.map(e => {
         return {
             id: e.id,
@@ -19,7 +19,7 @@ const getApiRecipes = async () => { /* me trae la info de la Api */
             summary: e.summary,
             score: e.spoonacularScore,
             healthScore: e.healthScore,
-            stepbyStep: e.analyzedInstructions.map(obj => obj.steps.map(obj2 => obj2.step)),
+            stepbyStep: (e.analyzedInstructions.length>0 && Array.isArray(e.analyzedInstructions[0].steps))?e.analyzedInstructions[0].steps.map(ele=>`step ${ele.number}: ${ele.step}`).join(", ") :'No steps found',
             image: e.image,
             diets: e.diets.map(e => e), /* es un arreglo */
         }
@@ -47,7 +47,7 @@ const getAllRecipes = async () => {
 }
 
 const searchByIdApi = async (id) => {
-    const recipe = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}`);
+    const recipe = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY4}`);
     const infoId = {
         name: recipe.data.title,
         image: recipe.data.image,
@@ -55,7 +55,8 @@ const searchByIdApi = async (id) => {
         summary: recipe.data.summary,
         score: recipe.data.spoonacularScore,
         healthScore: recipe.data.healthScore,
-        stepbyStep: recipe.data.analyzedInstructions.map(obj => obj.steps.map(obj2 => obj2.step))
+        stepbyStep: (e.analyzedInstructions.length>0 && Array.isArray(e.analyzedInstructions[0].steps))?e.analyzedInstructions[0].steps.map(ele=>`step ${ele.number}: ${ele.step}`).join(", ") :'No steps found'
+/*         stepbyStep: recipe.data.analyzedInstructions.map(obj => obj.steps.map(obj2 => obj2.step)) */
     }
     return infoId;
 }
@@ -93,7 +94,7 @@ router.get('/recipes', async (req, res) => {
 }),
 
     router.get('/types', async (req, res) => {
-        const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true`)
+        const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY4}&addRecipeInformation=true`)
         const arraysDiets = dietsApi.data.results.map(e => e.diets) /* diets es array */
         const dietsEach = ["ketogenic", "vegetarian", "pescetarian", "low FODMAP", "whole30", "lacto vegetarian", "ovo vegetarian"];
         arraysDiets.map((e) => {
@@ -126,7 +127,8 @@ router.get('/recipes', async (req, res) => {
 
     router.post('/recipe', async (req, res) => {
         let { name, summary, score, healthScore, stepbyStep, image, createdInDb, diets } = req.body;
-        let recipeCreated = await Recipe.create({ name, summary, score, healthScore, stepbyStep, image, createdInDb })
+/*         const steps = req.body.stepbyStep.join(", ") */
+        let recipeCreated = await Recipe.create({ name, summary, score, healthScore, stepbyStep, image, createdInDb });
         let dietDb = await TypesofDiet.findAll({
             where: { name: diets }
         })

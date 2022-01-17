@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { postRecipe, getDiets } from "../actions";
+import { postRecipe, getDiets } from "../actions/index.js";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -22,10 +22,11 @@ function validate(input) {
 }
 
 export default function CreateRecipe() {
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const diets = useSelector((state) => state.diets)
-    const [errors, setErrors] = useState({})
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const diets = useSelector((state) => state.diets);
+    const [errors, setErrors] = useState({});
+
 
     const [input, setInput] = useState({ /* input = estado local */
         name: "",
@@ -48,6 +49,10 @@ export default function CreateRecipe() {
         }))
     }
 
+    useEffect(() => {
+        dispatch(getDiets());
+    }, [dispatch]);
+
     function handleSelect(e) {
         setInput({
             ...input,
@@ -63,27 +68,45 @@ export default function CreateRecipe() {
         });
     }
 
+/*         function handleSubmit(e) {
+            e.preventDefault();
+            console.log("probando")
+            dispatch(postRecipe(input))
+            setInput({
+                name: "",
+                summary: "",
+                score: 50,
+                healthScore: 50,
+                stepbyStep: "",
+                image: "",
+                diets: []
+            });
+            alert("Recipe created");
+            navigate("/home")
+        } */
+
     function handleSubmit(e) {
-        e.preventDefault();
-        dispatch(postRecipe(input))
-        setInput({
-            name: "",
-            summary: "",
-            score: 50,
-            healthScore: 50,
-            stepbyStep: "",
-            image: "",
-            diets: []
-        });
-        alert("Recipe created");
-        navigate("/home")
+        if (input.name && input.summary) {
+            e.preventDefault();
+            dispatch(postRecipe(input));
+            setInput({
+                title: "",
+                summary: "",
+                score: 50,
+                healthScore: 50,
+                stepbyStep: "",
+                img: "",
+                diets: [],
+            });
+            alert("Recipe created");
+            navigate("/home");
+        } else {
+            e.preventDefault();
+            alert("You must complete name and summary fields!");
+        }
     }
 
-    useEffect(() => {
-        dispatch(getDiets());
-    }, [dispatch]);
-
-
+    console.log("este es el input", input)
     return (
         <div>
             <Link to='/home'><button>Back</button></Link>
@@ -126,18 +149,18 @@ export default function CreateRecipe() {
                     <input type="text" value={input.image} name="image" onChange={(e) => handleChange(e)} />
                 </div>
                 <div>
-                <select onChange={(e) => handleSelect(e)}>
-                    {diets.map((diet) => {
-                        return <option value={diet.name}>{diet.name}</option>
-                    })}
-                </select>
-                {
-                    input.diets.map(d =>
-                        <div>
-                            <p>{d}</p>
-                            <button onClick={(e) => handleDelete(e, d)}>X</button>
-                        </div>)
-                }
+                    <select onChange={(e) => handleSelect(e)}>
+                        {diets.map((diet) => {
+                            return <option value={diet.name}>{diet.name}</option>
+                        })}
+                    </select>
+                    {
+                        input.diets.map(d =>
+                            <div>
+                                <p>{d}</p>
+                                <button onClick={(e) => handleDelete(e, d)}>X</button>
+                            </div>)
+                    }
                 </div>
                 <button type="submit">Create recipe</button>
             </form>

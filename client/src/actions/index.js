@@ -34,10 +34,21 @@ export function getDiets(){
     }
 }
 
+/* export function postRecipe (payload) {
+    return function (dispatch) {
+        axios.post(`http://localhost:3001/recipe`, payload)
+            .then((e) =>  e)
+            .catch((err) => {
+                console.error(err)
+            })
+    }
+} */
+
 export function postRecipe(payload){
-    return async function(){
+    return async function(dispatch){
         try{
             var json = await axios.post("http://localhost:3001/recipe", payload);
+            console.log("este es el post", json)
             return{
                 type: "POST_RECIPE",
                 json

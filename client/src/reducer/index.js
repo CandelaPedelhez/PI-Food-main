@@ -40,10 +40,17 @@ function rootReducer(state = initialState, action) {
                 }
             })
             allRecipes.forEach(e => {
-                if (e.hasOwnProperty("typesofDiets") && e.typesofDiets.map(c => c.name === action.payload)) {
-                    dietsDb.push(e)
+                if (e.hasOwnProperty("typesofDiets")){
+                    if(e.typesofDiets.map((c) => c.name === action.payload)) {
+                        dietsDb.push(e) 
+                    }
                 }
             })
+/*             allRecipes.forEach(e => {
+                if (e.hasOwnProperty("typesofDiets") && e.typesofDiets.filter((c) => c.name === action.payload)) {
+                    dietsDb.push(e)
+                }
+            }) */
             const find = dietsApi.concat(dietsDb)
             if (find.length) {
                 return {

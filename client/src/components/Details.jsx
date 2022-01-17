@@ -37,12 +37,12 @@ export default function Details() {
                             {
                                 (myRecipe.diets) ?
                                     <p>{myRecipe.diets.map(r => (<li>{r} </li>))}</p> :
-                                    <p>{myRecipe.typesofDiets.map((s) => (s.name))}</p>
+                                    <p>{myRecipe.typesofDiets.map((s) => (<li>{s.name}</li>))}</p>
                             }
                             <h3 >Step-by-Step</h3>
                             {
                                 (myRecipe.stepbyStep !== null) ?
-                                    <p>{myRecipe.stepbyStep[0].map((s) => (s))}</p> :
+                                    <p>{myRecipe.stepbyStep}</p> :
                                     <p>You didn't load any</p>
                             }
 
