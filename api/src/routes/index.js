@@ -11,7 +11,7 @@ const router = Router();
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 const getApiRecipes = async () => { /* me trae la info de la Api */
-    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY8}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
+    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
     const apiInfo = apiUrl.data.results.map(e => {
         return {
             id: e.id,
@@ -47,7 +47,7 @@ const getAllRecipes = async () => {
 }
 
 const searchByIdApi = async (id) => {
-    const recipe = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY8}`);
+    const recipe = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY2}`);
     const infoId = {
         name: recipe.data.title,
         image: recipe.data.image,
@@ -77,7 +77,7 @@ const searchByIdAtDB = async (id) => {
 router.get('/recipes', async (req, res) => {
     let name = req.query.name;
     try {
-        const recipesTotalName = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY8}&addRecipeInformation=true&titleMatch=${name}`);
+        const recipesTotalName = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true&titleMatch=${name}`);
         const recipesTotalNameInfo = recipesTotalName.data.results.map(e => {
             return {
                 id: e.id,
@@ -104,7 +104,7 @@ router.get('/recipes', async (req, res) => {
 }),
 
     router.get('/types', async (req, res) => {
-        const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY8}&addRecipeInformation=true`)
+        const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true`)
         const arraysDiets = dietsApi.data.results.map(e => e.diets) /* diets es array */
         const dietsEach = ["vegetarian", "pescatarian", "whole 30", "fodmap friendly"];
         arraysDiets.map((e) => {

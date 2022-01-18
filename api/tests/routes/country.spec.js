@@ -21,4 +21,31 @@ describe('Recipe routes', () => {
       agent.get('/recipes').expect(200)
     );
   });
+
+  describe('GET /recipes/:id', () => {
+    it('GET response with 200 if it finds a recipe with the id provided', function () {
+        agent.get('/recipes/25')
+        .expect(function(res) {
+          expect(res.status).equal(200);
+        })
+      })
+  })
+  
+  describe('GET /recipes?name=', () => {
+    it('GET response with 200 if it finds a recipe with the name provided', function () {
+      agent.get('/recipes?name=rice')
+      .expect(function(res) {
+        expect(res.status).equal(200);
+      })
+    })
+  })
+  
+  describe('GET /types', () => {
+    it('GET response with 200 if it finds the types of diets', function () {
+      agent.get('/types')
+      .expect(function(res) {
+        expect(res.status).equal(200);
+      })
+    })
+  })
 });

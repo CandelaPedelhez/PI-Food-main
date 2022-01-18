@@ -22,7 +22,6 @@ export default function Home() {
         setCurrentPage(pageNumber)
     }
 
-
     useEffect(() => {
         dispatch(getAllRecipes())
     }, [dispatch]) /* el [] es la dependencia */

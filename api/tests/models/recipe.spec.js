@@ -19,4 +19,37 @@ describe('Recipe model', () => {
       });
     });
   });
+
+  describe('summary', () => {
+    it('should throw an error if summary is null', (done) => {
+      Recipe.create({})
+        .then(() => done(new Error('It requires a valid summary')))
+        .catch(() => done());
+    });
+    it('should work when its a valid smmary', () => {
+      Recipe.create({ summary: 'You will need fresh vegetables' });
+    });
+  })
+  describe('healthScore', () => {
+    it('should throw an error if healthScore is not a number', (done) => {
+      Recipe.create({healthScore: 'Hi'})
+        .then(() => done(new Error('It requires a number')))
+        .catch(() => done());
+    });
+    it('should work when its a number', () => {
+      Recipe.create({ healthScore: 58 });
+    });
+  })
+  describe('score', () => {
+    it('should throw an error if score is not a number', (done) => {
+      Recipe.create({score: 'Hi'})
+        .then(() => done(new Error('It requires a number')))
+        .catch(() => done());
+    });
+    it('should work when its a number', () => {
+      Recipe.create({ score: 95 });
+    });
+  })
 });
+
+

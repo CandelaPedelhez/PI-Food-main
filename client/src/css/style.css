@@ -104,17 +104,22 @@ h1{
     align-items: center;
     gap: 10px;
 }
-.paginador ul li button{
+.button{
     padding: 10px;
     color: white;
     background-color: #28262C;
     border: 1px solid white;
 }
-.paginador ul li button:hover{
+.button:hover{
     color: #28262C;
     background-color: white;
     transition: .3s;
     cursor: pointer;
+}
+.button :active{
+    color: white;
+    background-color: #bfc0c0;
+    transition: .3s;
 }
 
 .recetas .container_receta{

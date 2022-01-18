@@ -146,7 +146,7 @@ export default function CreateRecipe() {
                 </div>
                 <div className="recipe_container">
                     <label>Image</label>
-                    <input type="text" value={input.image} name="image" onChange={(e) => handleChange(e)} />
+                    <input alt= 'not found' type="text" value={input.image} name="image" placeholder= 'URL of the image' onChange={(e) => handleChange(e)} />
                 </div>
                 <div className="recipe_container column">
                     <select onChange={(e) => handleSelect(e)}>
