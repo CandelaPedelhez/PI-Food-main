@@ -17,6 +17,8 @@ export default function Home() {
     const currentRecipes = allRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);/* acá nos muestra todas las recetas de la página actual */
     const [order, setOrder] = useState("");
 
+    const imgDefault = "https://images.vexels.com/media/users/3/219108/isolated/lists/c9dfc4bf28a6886e9d11b513bf2669af-cook-reading-recipe-book-character.png"
+
 
     const paginado = (pageNumber) => {
         setCurrentPage(pageNumber)
@@ -54,12 +56,12 @@ export default function Home() {
             <div className="container_search">
                 <SearchBar/>
                 <select onChange={e => handleSortName(e)}>
-                    <option value="">Order by name</option>
+                    {/* <option value="">Order by name</option> */}
                     <option value="asc">Ascending</option>
                     <option value="desc">Descending</option>
                 </select>
                 <select onChange={e => handleSortScore(e)}>
-                <option value="">Order by Score</option>
+                {/* <option value="">Order by Score</option> */}
                     <option value="higher score">Higher Score</option>
                     <option value="lower score">Lower Score</option>
                 </select>
@@ -99,7 +101,7 @@ export default function Home() {
                                 </fragment> :
                                 <fragment>
                                 <Link className="container_receta" to={"/recipes/" + e.id}>
-                                    <Card name={e.name} image={e.image} diets={e.typesofDiets.map((s) => (<li>{s.name}</li>))} />
+                                    <Card name={e.name} image={(e.image) ? e.image : imgDefault } diets={e.typesofDiets.map((s) => (<li>{s.name}</li>))} />
                                 </Link>
                             </fragment>
 
