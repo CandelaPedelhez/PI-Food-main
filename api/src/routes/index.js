@@ -1,7 +1,7 @@
 const { Router } = require('express');
 require("dotenv").config();
 const { Recipe, TypesofDiet } = require('../db');
-const { API_KEY, API_KEY2, API_KEY3, API_KEY4, API_KEY5, API_KEY6} = process.env;
+const { API_KEY, API_KEY2, API_KEY3, API_KEY4, API_KEY5, API_KEY6, API_KEY7, API_KEY8} = process.env;
 const axios = require('axios');
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
@@ -11,15 +11,15 @@ const router = Router();
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 const getApiRecipes = async () => { /* me trae la info de la Api */
-    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY6}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
-    const apiInfo = await apiUrl.data.results.map(e => {
+    const apiUrl = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY8}&addRecipeInformation=true&number=100`); /* así traemos las recetas + la info, y limitamos a 100 */
+    const apiInfo = apiUrl.data.results.map(e => {
         return {
             id: e.id,
             name: e.title,
             summary: e.summary,
             score: e.spoonacularScore,
             healthScore: e.healthScore,
-            stepbyStep: (e.analyzedInstructions.length>0 && Array.isArray(e.analyzedInstructions[0].steps))?e.analyzedInstructions[0].steps.map(ele=>`step ${ele.number}: ${ele.step}`).join(", ") :'No steps found',
+            stepbyStep: (e.analyzedInstructions.length > 0 && Array.isArray(e.analyzedInstructions[0].steps)) ? e.analyzedInstructions[0].steps.map(ele => `step ${ele.number}: ${ele.step}`).join(", ") : 'No steps found',
             image: e.image,
             diets: e.diets.map(e => e), /* es un arreglo */
         }
@@ -47,7 +47,7 @@ const getAllRecipes = async () => {
 }
 
 const searchByIdApi = async (id) => {
-    const recipe = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY6}`);
+    const recipe = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY8}`);
     const infoId = {
         name: recipe.data.title,
         image: recipe.data.image,
@@ -55,8 +55,8 @@ const searchByIdApi = async (id) => {
         summary: recipe.data.summary,
         score: recipe.data.spoonacularScore,
         healthScore: recipe.data.healthScore,
-        stepbyStep: (recipe.data.analyzedInstructions.length>0 && Array.isArray(recipe.data.analyzedInstructions[0].steps))?recipe.data.analyzedInstructions[0].steps.map(ele=>`step ${ele.number}: ${ele.step}`).join(", ") :'No steps found'
-/*         stepbyStep: recipe.data.analyzedInstructions.map(obj => obj.steps.map(obj2 => obj2.step)) */
+        stepbyStep: (recipe.data.analyzedInstructions.length > 0 && Array.isArray(recipe.data.analyzedInstructions[0].steps)) ? recipe.data.analyzedInstructions[0].steps.map(ele => `step ${ele.number}: ${ele.step}`).join(", ") : 'No steps found'
+        /*         stepbyStep: recipe.data.analyzedInstructions.map(obj => obj.steps.map(obj2 => obj2.step)) */
     }
     return infoId;
 }
@@ -68,7 +68,7 @@ const searchByIdAtDB = async (id) => {
             attributes: ["name"],
             through: {
                 attributes: []
-            } //ver si la sintaxis esta bien escrita
+            }
         }
     })
     return recipe
@@ -77,12 +77,22 @@ const searchByIdAtDB = async (id) => {
 router.get('/recipes', async (req, res) => {
     let name = req.query.name;
     try {
+        const recipesTotalName = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY8}&addRecipeInformation=true&titleMatch=${name}`);
+        const recipesTotalNameInfo = recipesTotalName.data.results.map(e => {
+            return {
+                id: e.id,
+                name: e.title,
+                summary: e.summary,
+                score: e.spoonacularScore,
+                healthScore: e.healthScore,
+                stepbyStep: (e.analyzedInstructions.length > 0 && Array.isArray(e.analyzedInstructions[0].steps)) ? e.analyzedInstructions[0].steps.map(ele => `step ${ele.number}: ${ele.step}`).join(", ") : 'No steps found',
+                image: e.image,
+                diets: e.diets.map(e => e),
+            }
+        })
         const recipesTotal = await getAllRecipes();
         if (name) {
-            let recipeName = await recipesTotal.filter(e => e.name.toLowerCase().includes(name.toLowerCase()));
-            recipeName.length ?
-                res.status(200).send(recipeName) :
-                res.status(404).send('No pudimos encontrar la receta')
+            res.status(200).json(recipesTotalNameInfo);
         }
         else {
             res.status(200).send(recipesTotal);
@@ -94,9 +104,9 @@ router.get('/recipes', async (req, res) => {
 }),
 
     router.get('/types', async (req, res) => {
-        const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY6}&addRecipeInformation=true`)
+        const dietsApi = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY8}&addRecipeInformation=true`)
         const arraysDiets = dietsApi.data.results.map(e => e.diets) /* diets es array */
-        const dietsEach = ["ketogenic", "vegetarian", "pescetarian", "low FODMAP", "whole30", "lacto vegetarian", "ovo vegetarian"];
+        const dietsEach = ["vegetarian", "pescatarian", "whole 30", "fodmap friendly"];
         arraysDiets.map((e) => {
             for (let i = 0; i < e.length; i += 1) dietsEach.push(e[i]);
         });
@@ -110,24 +120,24 @@ router.get('/recipes', async (req, res) => {
     }),
 
     router.get('/recipes/:id', async (req, res) => {
-            const id = req.params.id
-            const idString = id.toString()
-            if(idString.length<7){
-                const detailApibyId = await searchByIdApi(id)
-                if(detailApibyId) return res.status(200).send(detailApibyId)
+        const id = req.params.id
+        const idString = id.toString()
+        if (idString.length < 7) {
+            const detailApibyId = await searchByIdApi(id)
+            if (detailApibyId) return res.status(200).send(detailApibyId)
+        }
+        else {
+            const detailDbbyId = await searchByIdAtDB(id)
+            if (detailDbbyId) return res.status(200).send(detailDbbyId)
+            else {
+                return res.status(404).send("Recipe doesn't exist")
             }
-            else{
-                const detailDbbyId = await searchByIdAtDB(id)
-                if(detailDbbyId) return res.status(200).send(detailDbbyId)
-                else{
-                    return res.status(404).send("Recipe doesn't exist")
-                }
-            }
+        }
     }),
 
     router.post('/recipe', async (req, res) => {
         let { name, summary, score, healthScore, stepbyStep, image, createdInDb, diets } = req.body;
-/*         const steps = req.body.stepbyStep.join(", ") */
+        /*         const steps = req.body.stepbyStep.join(", ") */
         let recipeCreated = await Recipe.create({ name, summary, score, healthScore, stepbyStep, image, createdInDb });
         let dietDb = await TypesofDiet.findAll({
             where: { name: diets }

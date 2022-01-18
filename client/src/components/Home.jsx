@@ -8,17 +8,14 @@ import Paginado from "./Paginado";
 import SearchBar from "./SearchBar";
 
 export default function Home() {
-    const dispatch = useDispatch()
-    const allRecipes = useSelector(state => state.allRecipes) /* traeme todo el state de recipes */
-    console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ,allRecipes)
-    const recipes = useSelector((state) => state.recipes)
-    console.log("chauuuuuuuuuu", recipes)
+    const dispatch = useDispatch();
+    const allRecipes = useSelector(state => state.recipes); /* traeme todo el state de recipes */
     const [currentPage, setCurrentPage] = useState(1); /* seteamos la pagina actual */
     const [recipesPerPage, setRecipesPerPage] = useState(9); /* guardamos cuántos personajes por página */
     const indexOfLastRecipe = currentPage * recipesPerPage; /* última receta de la página */
     const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage /* acá nos da la primer receta de cada pag */
     const currentRecipes = allRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);/* acá nos muestra todas las recetas de la página actual */
-    const [order, setOrder] = useState("")
+    const [order, setOrder] = useState("");
 
 
     const paginado = (pageNumber) => {
@@ -63,6 +60,7 @@ export default function Home() {
                     <option value="desc">Descending</option>
                 </select>
                 <select onChange={e => handleSortScore(e)}>
+                <option value="">Order by Score</option>
                     <option value="higher score">Higher Score</option>
                     <option value="lower score">Lower Score</option>
                 </select>
@@ -71,15 +69,13 @@ export default function Home() {
                         <option value="">Choose a diet</option>
                         <option value="gluten free">Gluten Free</option>
                         <option value="lacto ovo vegetarian">Lacto Ovo Vegetarian</option>
-                        <option value="ketogenic">Ketogenic</option>
+                        <option value="dairy free">Dairy Free</option>
                         <option value="vegetarian">Vegetarian</option>
-                        <option value="lacto vegetarian">Lacto-Vegetarian</option>
-                        <option value="ovo vegetarian">Ovo-Vegetarian</option>
                         <option value="vegan">Vegan</option>
-                        <option value="pescetarian">Pescetarian</option>
-                        <option value="paleolithic">Paleo</option>
+                        <option value="pescatarian">Pescatarian</option>
+                        <option value="paleolithic">Paleolithic</option>
                         <option value="primal">Primal</option>
-                        <option value="low FODMAP">Low FODMAP</option>
+                        <option value="fodmap friendly">Fodmap friendly</option>
                         <option value="whole30">Whole30</option>
                     </select>
                 }

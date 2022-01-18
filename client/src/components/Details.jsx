@@ -26,7 +26,7 @@ export default function Details() {
                         :
                         <div className="detail">
                             <h1 >{myRecipe.name}</h1>
-                            <img src={myRecipe.image} />
+                            <img src={myRecipe.image} alt=""/>
                             <h3>Summary</h3>
                             <p >{myRecipe.summary}</p>
                             <h3>Score</h3>

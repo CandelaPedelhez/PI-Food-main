@@ -7,10 +7,13 @@ const initialState = {
     details: []
 }
 let filtro = false;
+let search = false;
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
         case "GET_ALL_RECIPES":
+            filtro = false;
+            search = false;
             return {
                 ...state,
                 recipes: action.payload,
@@ -18,6 +21,7 @@ function rootReducer(state = initialState, action) {
             }
 
         case "GET_RECIPES_BY_NAME":
+            search = true
             return {
                 ...state,
                 recipes: action.payload
@@ -31,35 +35,46 @@ function rootReducer(state = initialState, action) {
 
         case "FILTER_BY_DIETS":
             const allRecipes = state.allRecipes
+            const recipes = state.recipes
             const dietsApi = []
             const dietsDb = []
-            filtro = true;
-            allRecipes.forEach(e => {
-                if (e.hasOwnProperty("diets") && e.diets.includes(action.payload)) {
-                    dietsApi.push(e)
-                }
-            })
-            allRecipes.forEach(e => {
-                if (e.hasOwnProperty("typesofDiets")){
-                    if(e.typesofDiets.map((c) => c.name === action.payload)) {
-                        dietsDb.push(e) 
+            if(search === true){
+                recipes.forEach(e => {
+                    if (e.hasOwnProperty("diets") && e.diets.includes(action.payload)) {
+                        dietsApi.push(e)
                     }
-                }
-            })
-/*             allRecipes.forEach(e => {
-                if (e.hasOwnProperty("typesofDiets") && e.typesofDiets.filter((c) => c.name === action.payload)) {
-                    dietsDb.push(e)
-                }
-            }) */
+                })
+                recipes.forEach(e => {
+                    if (e.hasOwnProperty("typesofDiets")){
+                        if(e.typesofDiets.map((c) => c.name).includes(action.payload)) {
+                            dietsDb.push(e) 
+                        }
+                    }
+                })
+            } else{
+                allRecipes.forEach(e => {
+                    if (e.hasOwnProperty("diets") && e.diets.includes(action.payload)) {
+                        dietsApi.push(e)
+                    }
+                })
+                allRecipes.forEach(e => {
+                    if (e.hasOwnProperty("typesofDiets")){
+                        if(e.typesofDiets.map((c) => c.name).includes(action.payload)) {
+                            dietsDb.push(e) 
+                        }
+                    }
+                })
+            }
             const find = dietsApi.concat(dietsDb)
-            if (find.length) {
+            if (find.length>0) {
                 return {
                     ...state,
                     recipes: find,
                     recipesByScore: find,
                     recipesByName: find
                 }
-            };
+            }; 
+            filtro = true
             break;
 
         case "ORDER_BY_NAME":
